@@ -15,15 +15,13 @@ function Contact(){
 
      <div  className="footer-quote">   
     <h1><b>"THEY  NEED  YOU 🤝"</b></h1>
+    <h4><b>"DEVELOPED BY: PRATEEK VERMA"</b></h4>
     </div>
 
 </div>
 
-
  
 <h4 style={{textAlign:'center'}}><b>Copyright © 2021 ROTARACT CLUB,IIIT GWALIOR</b></h4>
-    
-    
     
 
 </div>

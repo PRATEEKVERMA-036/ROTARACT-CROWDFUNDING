@@ -41,15 +41,15 @@ app.use(express.json());
 
 
 
-mongoose.connect("mongodb+srv://PRATEEK_CROUDFUNDING:987654321@cluster0.z9tc5.mongodb.net/crowdfundingDB?retryWrites=true&w=majority", {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-});
-
-// mongoose.connect("mongodb://localhost:27017/crowdfundingDB", {
+// mongoose.connect("mongodb+srv://PRATEEK_CROUDFUNDING:987654321@cluster0.z9tc5.mongodb.net/crowdfundingDB?retryWrites=true&w=majority", {
 //   useNewUrlParser: true,
 //   useUnifiedTopology: true,
 // });
+
+mongoose.connect("mongodb://localhost:27017/crowdfundingDB", {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});
 
 const cardSchema = {
   title: String,
