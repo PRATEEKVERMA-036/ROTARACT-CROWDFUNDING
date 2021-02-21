@@ -1,9 +1,12 @@
 import React,{useState} from "react";
+import BlockIcon from '@material-ui/icons/Block';
+import UpdateIcon from '@material-ui/icons/Update';
+import DeleteIcon from '@material-ui/icons/Delete';
 
 function AdminCard(props) {
 
   
-    function handleClick() {
+    function handleDelete() {
         // props.onDelete(props.id);
         
         // console.log("title");
@@ -33,11 +36,29 @@ function AdminCard(props) {
       // console.log("deleted note outside");
       //   console.log(deletenote);
 
+      function handleUpdate() {
+        let updatenote={
+          title:props.title,
+          content:props.content,
+          amount:props.amount
+        }
+        props.onUpdate(updatenote);
+      }
+      
+      
+      function handleBlock() {
+        let blocknote={
+          title:props.title,
+          content:props.content,
+          amount:props.amount
+        }
+        props.onBlock(blocknote);
+      }
 
   
     return (
     <div>
-      <div id="campaigns" className="twocolor-campaign campaign-content">
+      <div id="Admincampaigns" className="AdminTwocolor-campaign campaign-content">
        
         <img
           className="campaign-img"
@@ -51,26 +72,47 @@ function AdminCard(props) {
             <b>{props.title}</b>
           </h3>
 
-          <h6>
+          <p>
             {props.content}
-          </h6>
+          </p>
 
           </div>
 
-          <div className="campaign-content ">
-            <div className="campaign-amount">
+          <div className="AdminCampaign-content">
+            
+            <div className="AdminCampaign-amount">
               <b>REQUIRED AMOUNT:Rs.{props.amount}</b>
-              
             </div>
+              
 
             <button
-              type="button"
-              class="btn btn-success btn-lg"
+              type="submit"
+              class="btn btn-success btn-sm"
               
-              onClick={handleClick}
+              onClick={handleDelete}
             >
-              DELETE
+              <DeleteIcon/>
             </button>
+
+            <button
+              type="submit"
+              class="btn btn-success btn-sm"
+              
+              onClick={handleUpdate}
+            >
+              <UpdateIcon/>
+            </button>
+
+            <button
+              type="submit"
+              class="btn btn-success btn-sm"
+              
+              onClick={handleBlock}
+            >
+              <BlockIcon/>
+            </button>
+
+
           </div>
         </div>
       </div>

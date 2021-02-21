@@ -100,7 +100,9 @@ function Login(props) {
     }
     
     if (data.result === false) {
-      <Redirect to="/login" />;
+      alert("Mr.Culprit,you need to take a break!");
+      // <Redirect to="/login" />;
+
     }
 
   }, [data]);
@@ -115,7 +117,7 @@ function Login(props) {
   //   }
   // }, []);
   return (
-    <div>
+    <div className="Login-page">
       {/* <h1>LOGIN</h1> */}
       <form>
         Email
@@ -136,8 +138,6 @@ function Login(props) {
           Login
         </button>
       </form>
-
-    
 
     </div>
   );

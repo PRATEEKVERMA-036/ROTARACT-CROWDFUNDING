@@ -16,6 +16,13 @@ function Navbar() {
         alt="logo"
         width="107px"
         height="112px"
+        onClick={() => {
+                        history.push({
+                        pathname: '/',
+                        state: {  // location state
+                              },
+                      }); 
+                      }}
       />
 
       <div className="logo-text">
@@ -26,9 +33,9 @@ function Navbar() {
       
         {/* <Link to="home" className="link" spy={true} smooth={true} activeClass="active" duration={1000}>Home</Link> */}
         {/* <Link to="about" className="link" spy={true} smooth={true} activeClass="active" duration={1000}>About</Link> */}
-        <Link to="campaigns" className="link" spy={true} smooth={true} activeClass="active" duration={1000} onClick={() => {
+        <Link  className="link"  onClick={() => {
                                                           history.push({
-                                                          pathname: '/',
+                                                          pathname: '/AllCampaigns',
                                                           state: {  // location state
                                                                 },
                                                          }); 

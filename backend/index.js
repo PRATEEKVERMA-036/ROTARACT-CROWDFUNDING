@@ -39,23 +39,41 @@ app.use(express.json());
 // For parsing application/x-www-form-urlencoded
 // app.use(express.urlencoded({ extended: true }));
 
+//for build folder------------
+app.use(express.static(path.join(__dirname, 'build')));
 
 
-// mongoose.connect("mongodb+srv://PRATEEK_CROUDFUNDING:987654321@cluster0.z9tc5.mongodb.net/crowdfundingDB?retryWrites=true&w=majority", {
-//   useNewUrlParser: true,
-//   useUnifiedTopology: true,
-// });
+app.get('/*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'build', 'index.html'));
+});
 
-mongoose.connect("mongodb://localhost:27017/crowdfundingDB", {
+//----------------------------
+
+mongoose.connect("mongodb+srv://PRATEEK_CROUDFUNDING:987654321@cluster0.z9tc5.mongodb.net/crowdfundingDB?retryWrites=true&w=majority", {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
+
+// mongoose.connect("mongodb://localhost:27017/crowdfundingDB", {
+//   useNewUrlParser: true,
+//   useUnifiedTopology: true,
+// });
 
 const cardSchema = {
   title: String,
   content: String,
   amount: Number,
   donation: Number,
+  buttonStatus:{
+    // type:Boolean,
+   type:Number,
+    default:0,
+    validate:{
+      validator : Number.isInteger,
+    message   : '{VALUE} is not an integer value'
+              }
+  
+  },
   donor:[{
     orderid:String,//update order id when in /paynow
     donatedmoney:Number,//update in /paynow
@@ -196,15 +214,74 @@ const Login = mongoose.model("Login", loginSchema);
 
   //  });
 
+app.post("/newadmin",function(req,res){
+   
+  console.log("new admin",req.body);
+  bcrypt.hash(req.body.password, saltRounds, function(err, hash) {
+
+         const login = new Login({
+             email:req.body.email,
+             password:hash
+         });
+  
+         login.save(function(err){
+             if(err){
+                 console.log(err);
+             }
+             else{
+                 console.log("Login credential saved")
+             }
+         })
+  
+     });
+
+})
+
+
+app.post("/updatecampaign", function (req, res) {
+  console.log("Updated data",req.body)
+
+  Card.updateOne({"title":req.body.olddata.title,"content":req.body.olddata.content,"amount":req.body.olddata.amount},
+                {"title":req.body.newdata.title,"content":req.body.newdata.content},function (err, docs) { 
+                  if (err){ 
+                      console.log(err) 
+                  } 
+                  else{ 
+                      console.log("success Updated note : ", docs); 
+                  } 
+               })
+
+
+})
+
+
+app.post("/blockcampaign", function (req, res) {
+  console.log("block",req.body.title);
+
+  // mongoose.set('useFindAndModify', false);
+
+  Card.findOneAndUpdate({"title":req.body.title,"content":req.body.content,"amount":req.body.amount},
+  {$bit:{"buttonStatus":{xor:1}}},function (err,docs) { 
+    if (err){ 
+        console.log(err) 
+    } 
+    else{ 
+        console.log("found staus ", docs); 
+    } 
+ })
+
+
+})
+
+
 let loginStatus = false;
-
-
 
 app.post("/login", function (req, res) {
   Login.findOne({ email: req.body.email }, function (err, foundUser) {
     if (err) {
       console.log(err);
     } else {
+      
       if (foundUser) {
         console.log("user:", foundUser);
        
@@ -218,7 +295,7 @@ app.post("/login", function (req, res) {
            
            if(loginStatus === true)
            {
-           token = jwt.sign({_id:foundUser._id},process.env.TOKEN_SECRET);
+           token = jwt.sign({_id:foundUser._id},process.env.TOKEN_SECRET,{ expiresIn: '3s'});
            res.header('auth-token',token); 
           //  res.header('auth-token',token).send(token); 
            }
@@ -233,7 +310,10 @@ app.post("/login", function (req, res) {
 
           }
         );
+      } else{
+        res.json({result:false});
       }
+
     }
   });
 
@@ -585,17 +665,29 @@ app.post('/callback',async (req, res) => {
 app.post("/donorinfo",function(req,res){
   console.log("Click campaign data:",req.body);
 
-  Card.findOne({title:req.body.title,content:req.body.content},function(err,result){
+
+
+ Card.findOne({title:req.body.title,content:req.body.content},function(err,result){
       if(err)
       console.log(err)
       else{
-        console.log("Campaign database id",result);//database unique of individual campaign
-        res.json(result);
+        // console.log("Campaign database id",result);//database unique of individual campaign
+        
+        result.donor.map((info)=>(
+          info.id=(info.id).slice(0,10)+"xxxxxxxxxxxxxxxxxxxx"+((info.id).slice(30,((info.id).length)))
+          ))
+          
+          // console.log("infoooooooooo",result);
+          res.json(result);
+
       }
+    })	
+
+
+    
       
     
     
-   })
       
       
       

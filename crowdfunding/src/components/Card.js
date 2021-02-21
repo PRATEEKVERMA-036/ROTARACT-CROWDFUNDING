@@ -36,15 +36,23 @@ useEffect(()=>{
 //   console.log(element.donatedmoney);
 // });
 
+function message(){
+  alert("This campaigns is closed because either it is complete or due to some emergency");
+  console.log("CLOSED");
+}
 
 
+//for scroll page to top 
+useEffect(() => {
+  window.scrollTo(0, 0)
+}, [])
 
 
   return (
-    <div>
+    <div className="Card-page">
       {/* PROGRESS BAR */}
 
-      <h3 style={{margin:"1% 0% 0% 40%"}}><b>DONATION PROGRESS BAR</b></h3>
+      <h2 style={{margin:"1% 0% -1% 40%"}}><b>DONATION PROGRESS BAR</b></h2>
       <section className="progress-bar">
         <div class="progress" style={{ height: "70px" }}>
           <div
@@ -55,11 +63,11 @@ useEffect(()=>{
             aria-valuemin="0"
             aria-valuemax="100"
           >
-
+          <h5>
           {/*percentage of progress in bar*/}         
-          {(donorInfo && (donorInfo.donation>0))?((donorInfo.donation)/(donorInfo.amount)*100).toFixed(2)+"%":"0%"}
+          {(donorInfo && (donorInfo.donation>0))?((donorInfo.donation)/(donorInfo.amount)*100).toFixed(2)+"%"+" [ Rs."+donorInfo.donation+" ]":"0%"}
           {/* {(donorInfo)?Number(Number(donorInfo.donation)/Number(donorInfo.amount))*100:0}%   */}
-         
+          </h5>
           </div>
         </div>
       </section>
@@ -110,11 +118,12 @@ useEffect(()=>{
               </button>
               
               
-
+              {console.log("buttonstatus",donorInfo.buttonStatus)}
+              
               <button type="button" class="btn btn-success btn-lg"
                
               //  {(donorInfo && (donorInfo.amount===donorInfo.donation))?disabled={true}:disabled={false}}
-              disabled={(donorInfo && (donorInfo.donation>=donorInfo.amount))?true:false}
+              disabled={((donorInfo && (donorInfo.donation>=donorInfo.amount)) || donorInfo.buttonStatus)?true:false}
                onClick={() => {
                    
                    history.push({
@@ -130,6 +139,10 @@ useEffect(()=>{
               </button>
             </div>
           </div>
+
+          {((donorInfo && (donorInfo.donation>=donorInfo.amount)) || donorInfo.buttonStatus)?console.log(alert("This campaign is either fulfilled or stopped due to some reasons")):console.log()}
+
+
         </div>
       </section>
 
@@ -153,7 +166,7 @@ useEffect(()=>{
             </tr>
           </thead>
 
-
+         {console.log("donor info",donorInfo)}
         {(donorInfo && donorInfo.donor )?
         (
 
@@ -161,7 +174,7 @@ useEffect(()=>{
           <tbody>
             <tr>
               <th scope="row">{index+1}</th>
-              <td colspan="2">{(info.id).slice(0,10)+"xxxxxxxxxxxxxxxxxxxx"+((info.id).slice(30,((info.id).length)))}</td>
+              <td colspan="2">{info.id}</td>
               {/* <td colspan="2">{(info.id).slice(0,((info.id).length-4))+"xxxx"}</td> */}
               <td>{info.donatedmoney}</td>
               <td>{info.status}</td>

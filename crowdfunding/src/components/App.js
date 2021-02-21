@@ -9,10 +9,13 @@ import Navbar from "./Navbar"
 import Cards from "./Card"
 import Admin from "./Admin"
 import Login from "./Login"
+import UpdateCampaign from "./UpdateCampaign"
+
 import ProtectedRoute from "./ProtectedRoute"
 
 import "../AppStyle.css";
 import PaymentForm from "./PaymentForm";
+import AllCampaigns from "./AllCampaigns";
 
 
 
@@ -65,7 +68,9 @@ function App(){
         <Route exact path="/card"  component={Cards}/> 
         
         <Route exact path="/login"  component={Login}/> 
+        <Route exact path="/AllCampaigns"  component={AllCampaigns}/> 
         <ProtectedRoute exact path="/admin"  component={Admin}/> 
+        <ProtectedRoute exact path="/updatecampaign"  component={UpdateCampaign}/> 
         {/* {checkLogin.token? <Route exact path="/admin"  component={Admin}/> : <Route exact path="/login"  component={Login}/> } */}
         <Route exact path="/paymentform"  component={PaymentForm}/> 
        

@@ -7,6 +7,11 @@ import { useHistory } from "react-router-dom";
 
 function Admin(props) {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  
+  const [newadmin, setNewadmin] = useState({
+    email: "",
+    password: "",
+  });
 
   const location = useLocation();
 
@@ -29,6 +34,9 @@ function Admin(props) {
       .post("http://localhost:4000/admin", newNote)
       .then((res) => console.log(res.data))
       .catch((error) => console.log(error));
+
+      // for automatic refreshing page
+      window.location.reload();
   }
 
   function deleteNote(data) {
@@ -40,7 +48,31 @@ function Admin(props) {
       .post("http://localhost:4000/admin", data)
       .then((res) => console.log(res.data))
       .catch((error) => console.log(error));
+
+       // for automatic refreshing page
+      window.location.reload();
   }
+
+
+  function UpdateNote(info) {
+    history.push({
+      pathname: '/updatecampaign',
+      state: {  // location state
+              olddata:info
+             },
+    });
+  }
+
+  function BlockNote(data) {
+    
+    axios
+    .post("http://localhost:4000/blockcampaign", data)
+    .then((res) => {})
+    .catch((error) => console.log(error));
+
+  
+  }
+
 
   //updated data array
   const [data, setData] = useState([]);
@@ -81,12 +113,79 @@ function Admin(props) {
 
   };
 
+  function handleChange(event) {
+    const { name, value } = event.target;
+
+    setNewadmin((prevCredential) => {
+      return {
+        ...prevCredential,
+        [name]: value,
+      };
+    });
+  }
+
+  function createNewAdmin(event){
+    event.preventDefault();
+
+    axios
+      .post("http://localhost:4000/newadmin", newadmin)
+      .then((res) => {})
+      .catch((error) => console.log(error));
+
+      setNewadmin({
+        email: "",
+        password: "",
+      });
+
+    }
+
+
+
+   
 
 
 
   return (
     <div>
+
+      <button type="button" class="btn btn-danger btn-lg adminLogout" onClick={handleLogout}>LOGOUT</button>
+ 
+      
+      <h3 className="AdminAddCampaignTitle">ADD CAMPAIGN</h3>
+      <h3 className="AdminAddAdminTitle">ADD ADMIN</h3>
+      
+      {/* for creating new camopaigns */}
+      <div className="AdminAddCampaignForm Adminform">
       <CreateArea onAdd={addNote} />
+      </div>
+
+      {/* for creating new admin */}
+      <div className="AdminAddNewAdminForm Adminform">
+
+      <form>
+        Email
+        <input
+          type="email"
+          name="email"
+          onChange={handleChange}
+          value={newadmin.email}
+        />
+        Password
+        <input
+          type="password"
+          name="password"
+          onChange={handleChange}
+          value={newadmin.password}
+        />
+        <button type="submit" onClick={createNewAdmin}>
+          Add
+        </button>
+      </form>
+
+      </div>
+
+      {/* for printing all campaigns */}
+      <section className="AdminCard">
       {data.map((noteItem, index) => {
         return (
           <AdminCard
@@ -96,11 +195,14 @@ function Admin(props) {
             content={noteItem.content}
             amount={noteItem.amount}
             onDelete={deleteNote}
+            onUpdate={UpdateNote}
+            onBlock={BlockNote}
           />
         );
       })}
+      </section>
 
-      <button type="button" class="btn btn-danger btn-lg adminLogout" onClick={handleLogout}>LOGOUT</button>
+      
     </div>
   );
 }
